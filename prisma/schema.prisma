@@ -16,10 +16,11 @@ datasource db {
 
 model User {
   id               Int        @id @default(autoincrement())
-  username         String
+  firstname        String
+  lastname         String
   email            String     @unique
   password         String
-  profilepic       String?  
+  profilepic       String?
   friends          Int[]
   posts            Post[]
   comments         Comment[]
