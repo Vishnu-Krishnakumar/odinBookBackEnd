@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const queries = require("../database/dbQueries");
+const queries = require("../database/userQueries");
 const bcrypt = require("bcryptjs");
 const jwtStrategy = require("passport-jwt").Strategy;
 const extractJwt = require("passport-jwt").ExtractJwt;

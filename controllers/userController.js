@@ -1,6 +1,6 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
-const queries = require("../database/dbQueries");
+const queries = require("../database/userQueries");
 const jwt = require("jsonwebtoken");
 
 async function register(req, res) {

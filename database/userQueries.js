@@ -28,9 +28,18 @@ async function userFound(user) {
   else return null;
 }
 
+async function userVerify(user) {
+  const found = await prisma.user.findUnique({
+    where: {
+      email: user.email,
+    },
+  });
+  return found;
+}
+
 module.exports = {
     createUser,
     userFound,
-
+    userVerify,
   };
   

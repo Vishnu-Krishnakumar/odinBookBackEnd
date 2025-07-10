@@ -41,7 +41,6 @@ model Post {
   updatedAt DateTime   @updatedAt
   title     String     @db.VarChar(255)
   content   String     @db.Text
-  published Boolean    @default(false)
   comments  Comment[]
   likes     Int?       @default(0)
   author    User       @relation(fields: [authorId], references: [id], onDelete:Cascade)
