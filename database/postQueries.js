@@ -23,7 +23,7 @@ async function createPost(post) {
   data: {
     title: post.title,
     content: post.content,
-    authorId: post.authorId,
+    authorId: post.userId,
   },
   });
   return created;
