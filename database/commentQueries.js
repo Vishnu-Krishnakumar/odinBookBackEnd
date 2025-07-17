@@ -29,7 +29,7 @@ async function createComment(comment) {
       username: comment.username,
       content: comment.content,
       postId: comment.postId,
-      userId: comment.userId,
+      authorId: comment.userId,
     },
   });
 

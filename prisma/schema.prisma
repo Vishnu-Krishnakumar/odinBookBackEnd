@@ -22,6 +22,7 @@ model User {
   password         String
   profilepic       String?
   friends          Int[]
+  requests         Int[]
   posts            Post[]
   comments         Comment[]
 }
@@ -59,3 +60,4 @@ model Comment{
   author    User       @relation(fields: [authorId], references: [id], onDelete:Cascade)
   authorId  Int
 }
+

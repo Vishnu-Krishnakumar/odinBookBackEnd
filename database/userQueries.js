@@ -17,6 +17,19 @@ async function createUser(user) {
   return create;
 }
 
+async function requests(user){
+  console.log(user);
+  const requests = await prisma.user.findMany({
+    where:{
+      email: user.email,
+    },
+    select:{
+      requests: true,
+    }
+  })
+  return requests;
+}
+
 async function userFound(user) {
   const found = await prisma.user.findFirst({
     where: {
@@ -41,5 +54,6 @@ module.exports = {
     createUser,
     userFound,
     userVerify,
+    requests,
   };
   
