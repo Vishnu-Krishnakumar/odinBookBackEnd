@@ -30,6 +30,21 @@ async function requests(user){
   return requests;
 }
 
+async function sendRequest(user){
+  console.log(`User ${user.sender} is sending a request for ${user.receiver}`)
+  const requestUpdate = await prisma.user.update({
+    where:{
+      id:user.receiver,
+    },
+    data:{
+      requests:{
+        push: user.sender,
+      }
+    }
+  })
+  return requestUpdate;
+}
+
 async function userFound(user) {
   const found = await prisma.user.findFirst({
     where: {
@@ -55,5 +70,6 @@ module.exports = {
     userFound,
     userVerify,
     requests,
+    sendRequest,
   };
   
