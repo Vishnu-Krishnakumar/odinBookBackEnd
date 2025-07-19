@@ -19,30 +19,45 @@ async function createUser(user) {
 
 async function requests(user){
   console.log(user);
-  const requests = await prisma.user.findMany({
+  const requests = await prisma.friendRequest.findMany({
     where:{
-      email: user.email,
+      receiverId: user.id,
     },
-    select:{
-      requests: true,
-    }
   })
+  console.log(requests);
   return requests;
 }
 
 async function sendRequest(user){
-  console.log(`User ${user.sender} is sending a request for ${user.receiver}`)
-  const requestUpdate = await prisma.user.update({
-    where:{
-      id:user.receiver,
-    },
-    data:{
-      requests:{
-        push: user.sender,
+  try{
+    let requestUpdate = await prisma.friendRequest.create({
+      data: {
+        senderId: 4,
+        receiverId: 1,
       }
-    }
-  })
-  return requestUpdate;
+    });
+    console.log(requestUpdate);
+    return requestUpdate;
+  }
+  catch(error){
+    console.log(error)
+
+  }
+}
+
+async function acceptRequest(user){
+  console.log(user);
+  try{
+    const acceptFriend = await prisma.friend.create({
+      data:{
+        userId:user.user,
+        friendId:parseInt(user.friend),
+      }
+    });
+    console.log(acceptFriend);
+    return acceptFriend;
+  }catch(error){console.log(error)}
+  deleteFriendRequest(parseInt(user.friend),user.user);
 }
 
 async function userFound(user) {
@@ -65,11 +80,26 @@ async function userVerify(user) {
   return found;
 }
 
+async function deleteFriendRequest(senderId, receiverId) {
+  await prisma.friendRequest.deleteMany({
+    where: {
+      OR: [
+        { senderId, receiverId },
+        { senderId: receiverId, receiverId: senderId }
+      ]
+    }
+  });
+}
+
+
+
+
 module.exports = {
     createUser,
     userFound,
     userVerify,
     requests,
     sendRequest,
+    acceptRequest,
   };
   
