@@ -67,7 +67,7 @@ model Friend {
   userId    Int
   friendId  Int
   user      User @relation("UserFriends", fields: [userId], references: [id])
-  @@unique([userId, friendId]) // ensures unique friend pair
+  @@unique([userId, friendId]) 
 }
 
 model FriendRequest {
@@ -76,5 +76,5 @@ model FriendRequest {
   receiverId Int
   sender     User     @relation("SentRequests", fields: [senderId], references: [id])
   receiver   User     @relation("ReceivedRequests", fields: [receiverId], references: [id])
-  @@unique([senderId, receiverId]) // No duplicate requests
+  @@unique([senderId, receiverId])
 }
