@@ -1,5 +1,34 @@
 const userQueries = require("../database/userQueries");
+const jwt = require("jsonwebtoken");
+const cookie = require("cookie");
 module.exports = function(io){
+
+  io.use((socket, next) => {
+    const { headers, auth } = socket.handshake;
+    let token;
+
+
+    if (headers.cookie) {
+      const cookies = cookie.parse(headers.cookie);
+      token = cookies.auth_jwt;
+    }
+
+ 
+
+    if (!token) {
+      return next(new Error("No token provided"));
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.secret);
+      socket.user = decoded.user; 
+      console.log(decoded.user);
+      next();
+    } catch (err) {
+      console.error("JWT Error:", err.message);
+      return next(new Error("Invalid token"));
+    }
+  });
 
   io.on('connection', async (socket) => {
     let requests = await userQueries.requests({id:1});

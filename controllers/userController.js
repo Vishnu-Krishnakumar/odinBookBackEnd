@@ -22,7 +22,9 @@ async function register(req, res) {
 }
 
 async function login(req, res) {
+
   const found = await queries.userFound(req.body);
+
   if (found === null) return res.sendStatus(403);
   const user = {
     id: found.id,
@@ -41,6 +43,7 @@ async function login(req, res) {
         sameSite: "None",
         maxAge: 60 * 60 * 1000,
       });
+      console.log(token);
       res.json({token,});
       });
     }catch (error) {
