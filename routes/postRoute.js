@@ -20,7 +20,11 @@ postRoutes.post(
   postController.createPost
 );
   
-
+postRoutes.post(
+  "/likePost",
+//   auth.passport.authenticate("jwt", { session: false }),
+postController.likePost 
+)
   
 postRoutes.delete(
   "/:postId",

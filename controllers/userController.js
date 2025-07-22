@@ -2,6 +2,9 @@ require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const queries = require("../database/userQueries");
 const jwt = require("jsonwebtoken");
+// import { createClient } from '@supabase/supabase-js'
+//  const supabase = createClient('process.env.NEXT_PUBLIC_SUPABASE_URL', 'process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY')
+
 
 async function register(req, res) {
   const user = await createUser(req.body);
@@ -64,10 +67,26 @@ async function createUser(body) {
   };
   return user;
 }
-
+async function profileUpload(req,res){
+  console.log(req.file);
+  const { createClient } = await import('@supabase/supabase-js');
+  const { decode } = await import('base64-arraybuffer');
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.secret
+  );
+  const base64Data = req.file.buffer.toString('base64');
+  const { data, error } = await supabase.storage
+    .from('avatars')
+    .upload(`1/${req.file.originalname}`, decode(base64Data),{ contentType: 'image/png' })
+  console.log(data);
+  console.log(error);
+  res.json("Ok");
+}
 
   module.exports = {
     register,
     login,
+    profileUpload,
   };
   

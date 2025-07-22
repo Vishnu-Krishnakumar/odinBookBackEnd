@@ -24,7 +24,12 @@ async function createPost(req,res){
   const createdPost = await postQueries.createPost(post);
   return res.json(createdPost);
 }
-
+async function likePost(req,res){
+  let likedPost = await postQueries.likePost({id:parseInt(req.body.id), postId:parseInt(req.body.postId)})
+  console.log(likedPost);
+  if(likedPost === true) return res.json("Already Liked this post!");
+  else return res.json(likedPost);
+}
 async function deletePost(req, res) {
   // const postId = parseInt(req.params.postId);
   // const post = await postQueries.getPost(postId);
@@ -38,10 +43,10 @@ async function deletePost(req, res) {
     return res.json("Post Deleted!", deletedPost);
   // }
 }
-
 module.exports ={
   retrieveUserPosts,
   getPost,
   createPost,
   deletePost,
+  likePost,
 }

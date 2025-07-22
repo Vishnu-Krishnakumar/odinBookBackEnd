@@ -44,7 +44,7 @@ model Post {
   title     String     @db.VarChar(255)
   content   String     @db.Text
   comments  Comment[]
-  likes     Int?       @default(0)
+  likes     Int[]      
   author    User       @relation(fields: [authorId], references: [id], onDelete:Cascade)
   authorId  Int
 }
