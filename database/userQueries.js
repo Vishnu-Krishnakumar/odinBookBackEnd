@@ -135,8 +135,27 @@ async function friendList(user){
       userId:user.id
     }
   })
-  console.log(friends);
-  return friends;
+  let friendsList = [];
+  for(const friend of friends){
+    console.log(friend);
+    let user = await prisma.user.findFirst({
+      where:{
+        id:friend.friendId
+      },
+      select:{
+        id:true,
+        firstname:true,
+        lastname:true,
+        email:true,
+        profilepic:true,
+      }
+    })
+    console.log(user);
+    friendsList.push(user);
+  }
+
+  console.log(friendsList);
+  return friendsList;
 }
 module.exports = {
     createUser,
