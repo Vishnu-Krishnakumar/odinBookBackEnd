@@ -94,6 +94,11 @@ async function profilePictureUpdate(req,res){
   if(error) res.status(500).json({error:error.message});
   else res.status(200).json(data);
 }
+
+// async function friendList(req,res){
+//   let list = await 
+// }
+
   module.exports = {
     register,
     login,

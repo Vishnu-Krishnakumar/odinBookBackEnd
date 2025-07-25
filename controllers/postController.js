@@ -2,7 +2,8 @@ const userQueries = require("../database/userQueries")
 const postQueries = require("../database/postQueries");
 
 async function retrieveUserPosts(req, res) {
-  const posts = await postQueries.userPosts(req.body.userId);
+  const posts = await postQueries.userPosts(req.params.userId);
+  console.log(posts);
   return res.json(posts);
 }
 
@@ -16,6 +17,7 @@ async function getPost(req,res){
 }
 
 async function createPost(req,res){
+
   const post = {
     title:req.body.title,
     content:req.body.content,

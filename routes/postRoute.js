@@ -5,7 +5,7 @@ const auth = require("../auth/auth");
 const validation = require("../validation/validation");
 
 postRoutes.get(
-  "/",
+  "/getUserPosts/:userId",
   postController.retrieveUserPosts
 );
 
@@ -15,7 +15,7 @@ postRoutes.get(
 );
 
 postRoutes.post(
-  "/",
+  "/createPost",
 //   auth.passport.authenticate("jwt", { session: false }),
   postController.createPost
 );
