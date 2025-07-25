@@ -12,7 +12,7 @@ async function allPosts(){
 async function userPosts(user) {
   const posts = await prisma.post.findMany({
     where: {
-      authorId: user.id,
+      authorId: parseInt(user),
     },
   });
   return posts;

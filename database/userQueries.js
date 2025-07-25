@@ -76,7 +76,7 @@ async function acceptRequest(user){
 }
 
 async function userFound(user) {
-  const found = await prisma.user.findFirst({
+  const found = await prisma.user.findUnique({
     where: {
       email: user.email,
     },
@@ -86,7 +86,14 @@ async function userFound(user) {
   if (match) return found;
   else return null;
 }
-
+async function retrieveUser(userId){
+  const found = await prisma.user.findUnique({
+    where:{
+      id:userId,
+    }
+  })
+  return found;
+}
 async function userVerify(user) {
   const found = await prisma.user.findUnique({
     where: {
@@ -168,5 +175,6 @@ module.exports = {
     friendCheck,
     deleteFriends,
     friendList,
+    retrieveUser,
   };
   

@@ -95,6 +95,12 @@ async function profilePictureUpdate(req,res){
   else res.status(200).json(data);
 }
 
+async function getUser(req,res){
+  const user = await queries.retrieveUser(parseInt(req.params.userId));
+  console.log(user);
+  return res.json(user);
+}
+
 // async function friendList(req,res){
 //   let list = await 
 // }
@@ -103,6 +109,7 @@ async function profilePictureUpdate(req,res){
     register,
     login,
     profileUpload,
-    profilePictureUpdate
+    profilePictureUpdate,
+    getUser
   };
   

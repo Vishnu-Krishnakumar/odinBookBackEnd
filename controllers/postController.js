@@ -2,6 +2,7 @@ const userQueries = require("../database/userQueries")
 const postQueries = require("../database/postQueries");
 
 async function retrieveUserPosts(req, res) {
+  console.log("retrieving user " + req.params.userId + " posts");
   const posts = await postQueries.userPosts(req.params.userId);
   console.log(posts);
   return res.json(posts);
