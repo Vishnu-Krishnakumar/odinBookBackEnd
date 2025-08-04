@@ -27,12 +27,14 @@ async function createPost(req,res){
   const createdPost = await postQueries.createPost(post);
   return res.json(createdPost);
 }
+
 async function likePost(req,res){
   let likedPost = await postQueries.likePost({id:parseInt(req.body.id), postId:parseInt(req.body.postId)})
   console.log(likedPost);
-  if(likedPost === true) return res.json("Already Liked this post!");
-  else return res.json(likedPost);
+  if(likedPost === true) return res.json(true);
+  else return res.json(false);
 }
+
 async function deletePost(req, res) {
   // const postId = parseInt(req.params.postId);
   // const post = await postQueries.getPost(postId);
