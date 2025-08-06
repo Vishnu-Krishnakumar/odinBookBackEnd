@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 
 async function register(req, res) {
   const user = await createUser(req.body);
-
   let created = '';
   try {
     created = await queries.createUser(user);
@@ -101,15 +100,21 @@ async function getUser(req,res){
   return res.json(user);
 }
 
-// async function friendList(req,res){
-//   let list = await 
-// }
+ async function friendList(req,res){
+  let user ={
+    id:req.params.id,
+  };
+  let list = await queries.friendList(user);
+  console.log(list);
+  return res.json(list);
+}
 
   module.exports = {
     register,
     login,
     profileUpload,
     profilePictureUpdate,
-    getUser
+    getUser,
+    friendList
   };
   
