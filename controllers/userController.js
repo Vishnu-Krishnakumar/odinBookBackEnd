@@ -100,7 +100,18 @@ async function getUser(req,res){
   return res.json(user);
 }
 
- async function friendList(req,res){
+async function updateUser(req,res){
+  const user = {
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    email: req.body.email,
+  }
+  let update = await queries.updateUser(user);
+  console.log("Just updated: " + update);
+  res.json(update);
+}
+
+async function friendList(req,res){
   let user ={
     id:req.params.id,
   };
@@ -115,6 +126,7 @@ async function getUser(req,res){
     profileUpload,
     profilePictureUpdate,
     getUser,
-    friendList
+    friendList,
+    updateUser
   };
   

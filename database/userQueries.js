@@ -17,6 +17,18 @@ async function createUser(user) {
   return create;
 }
 
+async function updateUser(user){
+  const update = await prisma.user.update({
+    where:{
+      email:user.email
+    },
+    data:{
+      firstname:user.firstname,
+      lastname:user.lastname,
+      email:user.email,
+    }
+  })
+}
 async function requests(user){
   console.log(user);
   const requests = await prisma.friendRequest.findMany({
@@ -176,5 +188,6 @@ module.exports = {
     deleteFriends,
     friendList,
     retrieveUser,
+    updateUser,
   };
   
