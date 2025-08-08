@@ -167,6 +167,7 @@ async function friendList(user){
     }
   })
   let friendsList = [];
+  console.log("Current list :" + friendsList)
   for(const friend of friends){
     console.log(friend);
     let user = await prisma.user.findFirst({

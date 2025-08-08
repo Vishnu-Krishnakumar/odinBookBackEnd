@@ -126,8 +126,10 @@ async function updateUser(req,res){
 
 async function friendList(req,res){
   let user ={
-    id:req.params.id,
+    id:parseInt(req.params.userId),
   };
+  console.log(req.params);
+  console.log(user);
   let list = await queries.friendList(user);
   console.log(list);
   return res.json(list);
