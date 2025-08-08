@@ -66,6 +66,8 @@ async function createUser(body) {
 
 async function profileUpload(req,res){
   console.log(req.file);
+  console.log(req.user);
+  console.log(req.body.user);
   const { createClient } = await import('@supabase/supabase-js');
   const { decode } = await import('base64-arraybuffer');
   const supabase = createClient(
@@ -75,10 +77,18 @@ async function profileUpload(req,res){
   const base64Data = req.file.buffer.toString('base64');
   const { data, error } = await supabase.storage
     .from('avatars')
-    .upload(`${req.body.user.id}/profilePicture`, decode(base64Data),{ contentType: 'image/png' })
-
+    .upload(`${req.user.user.id}/avatar`, req.file.buffer,{ contentType: req.file.mimetype ,cacheControl: '3600',upsert: true})
   if(error) res.status(500).json({error:error.message});
-  else res.status(200).json(data);
+  else{
+    const { data: urlData, error } = supabase
+      .storage
+      .from('avatars')
+      .getPublicUrl(`${req.user.user.id}/avatar`);
+    console.log(urlData);
+    let update = await queries.updateProfilePicture({email:req.user.user.email, pictureUrl: urlData.publicUrl})
+    console.log(update);
+    res.status(200).json(data)
+  };
 }
 
 async function profilePictureUpdate(req,res){
@@ -89,7 +99,9 @@ async function profilePictureUpdate(req,res){
     process.env.secret
   );
   const base64Data = req.file.buffer.toString('base64');
-  const { data, error } = await supabase.storage.from('avatars').update(`${req.body.user.id}/profilePicture`, decode(base64Data),{cacheControl: '3600',upsert: true})
+  const { data, error } = await supabase.storage
+    .from('avatars')
+    .update(`${req.user.user.id}/profilePicture`, decode(base64Data),{cacheControl: '3600',upsert: true})
   if(error) res.status(500).json({error:error.message});
   else res.status(200).json(data);
 }
@@ -105,6 +117,7 @@ async function updateUser(req,res){
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
+    originalEmail: req.body.originalEmail,
   }
   let update = await queries.updateUser(user);
   console.log("Just updated: " + update);

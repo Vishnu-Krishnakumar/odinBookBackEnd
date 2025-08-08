@@ -20,7 +20,7 @@ async function createUser(user) {
 async function updateUser(user){
   const update = await prisma.user.update({
     where:{
-      email:user.email
+      email:user.originalEmail
     },
     data:{
       firstname:user.firstname,
@@ -28,6 +28,18 @@ async function updateUser(user){
       email:user.email,
     }
   })
+  return update;
+}
+async function updateProfilePicture(user){
+  const update = await prisma.user.update({
+    where:{
+      email: user.email
+    },
+    data:{
+      profilepic:user.pictureUrl
+    }
+  })
+  return update;
 }
 async function requests(user){
   console.log(user);
@@ -189,5 +201,6 @@ module.exports = {
     friendList,
     retrieveUser,
     updateUser,
+    updateProfilePicture,
   };
   
