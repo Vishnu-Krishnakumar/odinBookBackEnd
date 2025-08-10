@@ -15,4 +15,5 @@ userRoutes.post("/profilePictureUpload",auth.passport.authenticate("jwt", { sess
 userRoutes.post("/profilePictureUpdate",upload.single('avatar'),userController.profilePictureUpdate);
 userRoutes.get("/profile/:userId",userController.getUser)
 userRoutes.get("/profile/friendList/:userId",userController.friendList)
+userRoutes.get("/userList",auth.passport.authenticate("jwt", { session: false }), userController.userList)
 module.exports = userRoutes;

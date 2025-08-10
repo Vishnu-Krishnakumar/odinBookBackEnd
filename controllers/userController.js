@@ -135,6 +135,12 @@ async function friendList(req,res){
   return res.json(list);
 }
 
+async function userList(req,res){
+  console.log(req.user);
+  let userList = await queries.userList(req.user.user.id)
+  console.log(userList);
+  res.json(userList);
+}
   module.exports = {
     register,
     login,
@@ -142,6 +148,7 @@ async function friendList(req,res){
     profilePictureUpdate,
     getUser,
     friendList,
-    updateUser
+    updateUser,
+    userList
   };
   

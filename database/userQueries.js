@@ -162,17 +162,22 @@ async function deleteFriends(user){
 
 async function friendList(user){
   let friends = await prisma.friend.findMany({
+    
     where:{
-      userId:user.id
-    }
+      OR:[
+        {userId:user.id},
+        {friendId:user.id},      
+      ]
+   }
   })
   let friendsList = [];
   console.log("Current list :" + friendsList)
   for(const friend of friends){
     console.log(friend);
-    let user = await prisma.user.findFirst({
+    const otherUserId = friend.userId === user.id ? friend.friendId : friend.userId;
+    let friendUser  = await prisma.user.findFirst({
       where:{
-        id:friend.friendId
+        id:otherUserId
       },
       select:{
         id:true,
@@ -182,12 +187,23 @@ async function friendList(user){
         profilepic:true,
       }
     })
-    console.log(user);
-    friendsList.push(user);
+    console.log(friendUser );
+    friendsList.push(friendUser );
   }
 
   console.log(friendsList);
   return friendsList;
+}
+
+async function userList(userId){
+  let users = await prisma.user.findMany({
+    where:{
+      id:{
+        not: parseInt(userId),
+      },
+    },
+  })
+  return users;
 }
 module.exports = {
     createUser,
@@ -203,5 +219,6 @@ module.exports = {
     retrieveUser,
     updateUser,
     updateProfilePicture,
+    userList,
   };
   
