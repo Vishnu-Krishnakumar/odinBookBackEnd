@@ -135,11 +135,23 @@ async function friendList(req,res){
   return res.json(list);
 }
 
+async function friendRequest(req,res){
+  let requests = await queries.requests(req.user.user);
+  console.log(requests);
+  res.json(requests);
+}
+
 async function userList(req,res){
   console.log(req.user);
   let userList = await queries.userList(req.user.user.id)
   console.log(userList);
   res.json(userList);
+}
+
+async function userListIntro(req,res){
+  let randomList = await queries.userListIntro();
+  console.log(randomList);
+  res.json(randomList);
 }
   module.exports = {
     register,
@@ -149,6 +161,8 @@ async function userList(req,res){
     getUser,
     friendList,
     updateUser,
-    userList
+    userList,
+    userListIntro,
+    friendRequest,
   };
   

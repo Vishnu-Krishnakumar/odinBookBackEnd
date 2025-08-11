@@ -42,13 +42,14 @@ async function updateProfilePicture(user){
   return update;
 }
 async function requests(user){
+  console.log("checking requests for user : ");
   console.log(user);
   const requests = await prisma.friendRequest.findMany({
     where:{
       receiverId: user.id,
     },
   })
-  console.log(requests);
+
   return requests;
 }
 
@@ -61,8 +62,7 @@ async function friendCheck(user){
       ]
     }
   })
-  console.log("testing for friend");
-  console.log(friendCheck);
+
   if(friendCheck === null) return false;
   else return true;
 }
@@ -94,7 +94,7 @@ async function acceptRequest(user){
       }
     });
     await deleteFriendRequest(parseInt(user.friend),user.user);
-    console.log(acceptFriend);
+
     return acceptFriend;
   }catch(error){console.log(error)}
 }
@@ -162,18 +162,15 @@ async function deleteFriends(user){
 
 async function friendList(user){
   let friends = await prisma.friend.findMany({
-    
     where:{
       OR:[
         {userId:user.id},
         {friendId:user.id},      
       ]
    }
-  })
+  });
   let friendsList = [];
-  console.log("Current list :" + friendsList)
   for(const friend of friends){
-    console.log(friend);
     const otherUserId = friend.userId === user.id ? friend.friendId : friend.userId;
     let friendUser  = await prisma.user.findFirst({
       where:{
@@ -187,11 +184,8 @@ async function friendList(user){
         profilepic:true,
       }
     })
-    console.log(friendUser );
     friendsList.push(friendUser );
   }
-
-  console.log(friendsList);
   return friendsList;
 }
 
@@ -203,7 +197,35 @@ async function userList(userId){
       },
     },
   })
+  console.log(users);
   return users;
+}
+async function userListIntro() {
+  const users = await prisma.$queryRaw`
+    SELECT id, firstname, lastname, profilepic
+    FROM "User"
+    ORDER BY RANDOM()
+    LIMIT 5;
+  `;
+  return users;
+}
+
+// async function userListIntro(){
+//   let users = await prisma.user.findMany();
+//   console.log(users);
+//   const randomUsers = new Set();
+//   while(randomUsers.size < 5){
+//     let randomNumber = getRandomIntInclusive(0,users.length-1);
+//     randomUsers.add(users[randomNumber]);
+//   }
+//   console.log(randomUsers);
+//   return randomUsers;
+// }
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 module.exports = {
     createUser,
@@ -220,5 +242,6 @@ module.exports = {
     updateUser,
     updateProfilePicture,
     userList,
+    userListIntro,
   };
   

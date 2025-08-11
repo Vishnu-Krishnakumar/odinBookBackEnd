@@ -32,26 +32,31 @@ module.exports = function(io){
 
   io.on('connection', async (socket) => {
     let user = socket.user;
-    console.log(user);
-    let requests = await userQueries.requests({id:socket.user.id});
-    console.log("Current requests are");
-    console.log(requests);
-    socket.emit(`request-${socket.user.id}`,requests);
+    console.log(socket.user);
     let list = await userQueries.friendList({id:socket.user.id});
     socket.emit(`friendList-${socket.user.id}`,list);
-    socket.on('sendRequest',async (socket) =>{
+    
+    socket.on(`request-${socket.user.id}`, async (data)=>{
+      console.log("Current requests are");
+      let requests = await userQueries.requests({id:socket.user.id});
+      
+      console.log(requests);
+      socket.emit(`sentRequest-${user.id}`,requests);
+    })
+
+    socket.on('sendRequest',async (data) =>{
       console.log("test");
-      const friendCheck = await userQueries.friendCheck({sender:parseInt(socket.sender), receiver:parseInt(socket.receiver)})
+      const friendCheck = await userQueries.friendCheck({sender:parseInt(data.sender), receiver:parseInt(data.receiver)})
       if(friendCheck) {
         console.log("friendcheck test " + friendCheck );
-        io.emit(`request-${socket.receiver}`,[]);
+        io.emit(`request-${data.receiver}`,[]);
       }
       else{
-        let sentRequest = await userQueries.sendRequest({sender:parseInt(socket.sender), receiver:parseInt(socket.receiver)});
+        let sentRequest = await userQueries.sendRequest({sender:parseInt(data.sender), receiver:parseInt(data.receiver)});
         if(!Array.isArray(sentRequest)) {
           sentRequest = [sentRequest];
         }
-        io.emit(`request-${socket.receiver}`,sentRequest)
+        io.emit(`request-${data.receiver}`,sentRequest)
       }
       
     })
