@@ -32,7 +32,7 @@ async function login(req, res) {
     email: found.email,
     author:found.author,
   };
-  console.log(user);
+
   if (found !== null) {
     try {
       jwt.sign({ user: user }, process.env.secret,{ expiresIn: '1h' }, (err, token) => {
@@ -42,7 +42,7 @@ async function login(req, res) {
         sameSite: "None",
         maxAge: 60 * 60 * 1000,
       });
-      console.log(token);
+
       res.json({token,});
       });
     }catch (error) {
@@ -65,9 +65,7 @@ async function createUser(body) {
 }
 
 async function profileUpload(req,res){
-  console.log(req.file);
-  console.log(req.user);
-  console.log(req.body.user);
+
   const { createClient } = await import('@supabase/supabase-js');
   const { decode } = await import('base64-arraybuffer');
   const supabase = createClient(
@@ -84,10 +82,10 @@ async function profileUpload(req,res){
       .storage
       .from('avatars')
       .getPublicUrl(`${req.user.user.id}/avatar`);
-    console.log(urlData);
+  
     let update = await queries.updateProfilePicture({email:req.user.user.email, pictureUrl: urlData.publicUrl})
-    console.log(update);
-    res.status(200).json(data)
+
+    res.status(200).json(update)
   };
 }
 
@@ -108,7 +106,7 @@ async function profilePictureUpdate(req,res){
 
 async function getUser(req,res){
   const user = await queries.retrieveUser(parseInt(req.params.userId));
-  console.log(user);
+
   return res.json(user);
 }
 
@@ -120,7 +118,7 @@ async function updateUser(req,res){
     originalEmail: req.body.originalEmail,
   }
   let update = await queries.updateUser(user);
-  console.log("Just updated: " + update);
+
   res.json(update);
 }
 
@@ -128,29 +126,28 @@ async function friendList(req,res){
   let user ={
     id:parseInt(req.params.userId),
   };
-  console.log(req.params);
-  console.log(user);
+
   let list = await queries.friendList(user);
-  console.log(list);
+
   return res.json(list);
 }
 
 async function friendRequest(req,res){
   let requests = await queries.requests(req.user.user);
-  console.log(requests);
+
   res.json(requests);
 }
 
 async function userList(req,res){
 
-  let userList = await queries.userListIntro(req.user.user.id,10)
-  console.log(userList);
+  let userList = await queries.userListIntro(req.user.user.id,100)
+
   res.json(userList);
 }
 
 async function userListIntro(req,res){
   let randomList = await queries.userListIntro(req.user.user.id);
-  console.log(randomList);
+
   res.json(randomList);
 }
   module.exports = {

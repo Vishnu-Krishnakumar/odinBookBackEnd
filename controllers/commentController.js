@@ -17,7 +17,7 @@ async function createComment(req, res) {
     userId: parseInt(req.body.userId),
     postId: postId,
   };
-  console.log(comment)
+
   const createdComment = await commentQueries.createComment(comment);
   res.json(createdComment);
 }

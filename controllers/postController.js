@@ -2,9 +2,9 @@ const userQueries = require("../database/userQueries")
 const postQueries = require("../database/postQueries");
 
 async function retrieveUserPosts(req, res) {
-  console.log("retrieving user " + req.params.userId + " posts");
+
   const posts = await postQueries.userPosts(req.params.userId);
-  console.log(posts);
+
   return res.json(posts);
 }
 
@@ -30,7 +30,7 @@ async function createPost(req,res){
 
 async function likePost(req,res){
   let likedPost = await postQueries.likePost({id:parseInt(req.body.id), postId:parseInt(req.body.postId)})
-  console.log(likedPost);
+
   if(likedPost === true) return res.json(true);
   else return res.json(false);
 }
@@ -50,9 +50,9 @@ async function deletePost(req, res) {
 }
 
 async function recentPosts(req,res) { 
-  console.log('test');
+
   const recent = await postQueries.getRecentPosts(req.user.user.id);
-  console.log(recent);
+
   return res.json(recent);
 }
 module.exports ={

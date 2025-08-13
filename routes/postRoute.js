@@ -10,13 +10,15 @@ postRoutes.get(
   postController.retrieveUserPosts
 );
 
-// postRoutes.get(
-//   "/:postId",
-//   auth.passport.authenticate("jwt", { session: false }),
-//   postController.getPost
-// );
-
 postRoutes.get("/recentPosts",  auth.passport.authenticate("jwt", { session: false }),postController.recentPosts);
+
+postRoutes.get(
+  "/:postId",
+  auth.passport.authenticate("jwt", { session: false }),
+  postController.getPost
+);
+
+
 
 postRoutes.post(
   "/createPost",

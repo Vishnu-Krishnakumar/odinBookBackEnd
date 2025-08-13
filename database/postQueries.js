@@ -89,7 +89,7 @@ async function getRecentPosts(userId, limit = 10, skip = 0){
 }
 
 async function updatePost(post) {
-  console.log(post);
+
   const updatedPost = await prisma.post.update({
     where: {
       id: post.id,
@@ -100,7 +100,7 @@ async function updatePost(post) {
     },
   });
 
-  console.log(updatedPost);
+
   return updatedPost;
 }
 
@@ -132,7 +132,7 @@ async function likePost(user) {
 }
 
 async function likeListCheck(user){
-  console.log(user);
+
   let listChecked = false;
   let likeList = await prisma.post.findMany({
     where:{

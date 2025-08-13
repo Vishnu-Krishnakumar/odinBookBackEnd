@@ -22,7 +22,7 @@ module.exports = function(io){
     try {
       const decoded = jwt.verify(token, process.env.secret);
       socket.user = decoded.user; 
-      console.log(decoded.user);
+
       next();
     } catch (err) {
       console.error("JWT Error:", err.message);

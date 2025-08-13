@@ -30,6 +30,7 @@ async function updateUser(user){
   })
   return update;
 }
+
 async function updateProfilePicture(user){
   const update = await prisma.user.update({
     where:{
@@ -41,14 +42,22 @@ async function updateProfilePicture(user){
   })
   return update;
 }
+
 async function requests(user){
-  console.log("checking requests for user : ");
-  console.log(user);
+
   const requests = await prisma.friendRequest.findMany({
-    where:{
+    where: {
       receiverId: user.id,
     },
-  })
+    include: {
+      sender: {
+        select: {
+          firstname: true,
+          lastname: true
+        }
+      }
+    }
+  });
 
   return requests;
 }
@@ -75,7 +84,7 @@ async function sendRequest(user){
         receiverId: user.receiver,
       }
     });
-    console.log(requestUpdate);
+
     return requestUpdate;
   }
   catch(error){
@@ -85,7 +94,7 @@ async function sendRequest(user){
 }
 
 async function acceptRequest(user){
-  console.log(user);
+
   try{
     const acceptFriend = await prisma.friend.create({
       data:{
@@ -110,6 +119,7 @@ async function userFound(user) {
   if (match) return found;
   else return null;
 }
+
 async function retrieveUser(userId){
   const found = await prisma.user.findUnique({
     where:{
@@ -118,6 +128,7 @@ async function retrieveUser(userId){
   })
   return found;
 }
+
 async function userVerify(user) {
   const found = await prisma.user.findUnique({
     where: {
@@ -137,7 +148,7 @@ async function deleteFriendRequest(senderId, receiverId) {
         ]
       }
     })
-    console.log(deleted);
+
   } catch (error) {
     console.error('Error deleting friend request:', error);
     throw error;
@@ -183,6 +194,7 @@ async function friendList(user){
         lastname:true,
         email:true,
         profilepic:true,
+        password:false,
       }
     })
     friendsList.push(friendUser );
@@ -197,8 +209,16 @@ async function userList(userId){
         not: parseInt(userId),
       },
     },
+    select:{
+      id:true,
+      firstname:true,
+      lastname:true,
+      email:true,
+      profilepic:true,
+      password:false,
+    }
   })
-  console.log(users);
+
   return users;
 }
 
@@ -210,7 +230,7 @@ async function userListIntro(userId, limit = 5) {
   //   LIMIT 5;
   // `;
   const users = await prisma.$queryRaw`
-  SELECT * FROM "User"
+  SELECT id,firstname,lastname,profilepic FROM "User"
   WHERE "id" != ${userId}
   AND "id" NOT IN (
     -- All friends
