@@ -142,14 +142,14 @@ async function friendRequest(req,res){
 }
 
 async function userList(req,res){
-  console.log(req.user);
-  let userList = await queries.userList(req.user.user.id)
+
+  let userList = await queries.userListIntro(req.user.user.id,10)
   console.log(userList);
   res.json(userList);
 }
 
 async function userListIntro(req,res){
-  let randomList = await queries.userListIntro();
+  let randomList = await queries.userListIntro(req.user.user.id);
   console.log(randomList);
   res.json(randomList);
 }

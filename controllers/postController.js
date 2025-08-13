@@ -48,10 +48,18 @@ async function deletePost(req, res) {
     return res.json("Post Deleted!", deletedPost);
   // }
 }
+
+async function recentPosts(req,res) { 
+  console.log('test');
+  const recent = await postQueries.getRecentPosts(req.user.user.id);
+  console.log(recent);
+  return res.json(recent);
+}
 module.exports ={
   retrieveUserPosts,
   getPost,
   createPost,
   deletePost,
   likePost,
+  recentPosts,
 }

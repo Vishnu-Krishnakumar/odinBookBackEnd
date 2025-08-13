@@ -6,29 +6,33 @@ const validation = require("../validation/validation");
 
 postRoutes.get(
   "/getUserPosts/:userId",
+  auth.passport.authenticate("jwt", { session: false }),
   postController.retrieveUserPosts
 );
 
-postRoutes.get(
-  "/:postId",
-  postController.getPost
-);
+// postRoutes.get(
+//   "/:postId",
+//   auth.passport.authenticate("jwt", { session: false }),
+//   postController.getPost
+// );
+
+postRoutes.get("/recentPosts",  auth.passport.authenticate("jwt", { session: false }),postController.recentPosts);
 
 postRoutes.post(
   "/createPost",
-//   auth.passport.authenticate("jwt", { session: false }),
+  auth.passport.authenticate("jwt", { session: false }),
   postController.createPost
 );
   
 postRoutes.post(
   "/likePost",
-//   auth.passport.authenticate("jwt", { session: false }),
+auth.passport.authenticate("jwt", { session: false }),
 postController.likePost 
 )
   
 postRoutes.delete(
   "/:postId",
-//   auth.passport.authenticate("jwt", { session: false }),
+  auth.passport.authenticate("jwt", { session: false }),
   postController.deletePost
 );
 

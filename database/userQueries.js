@@ -158,6 +158,7 @@ async function deleteFriends(user){
   }catch(error){
     console.log(error);
   }
+  return deleted;
 }
 
 async function friendList(user){
@@ -200,14 +201,33 @@ async function userList(userId){
   console.log(users);
   return users;
 }
-async function userListIntro() {
+
+async function userListIntro(userId, limit = 5) {
+  // const users = await prisma.$queryRaw`
+  //   SELECT id, firstname, lastname, profilepic
+  //   FROM "User"
+  //   ORDER BY RANDOM()
+  //   LIMIT 5;
+  // `;
   const users = await prisma.$queryRaw`
-    SELECT id, firstname, lastname, profilepic
-    FROM "User"
-    ORDER BY RANDOM()
-    LIMIT 5;
+  SELECT * FROM "User"
+  WHERE "id" != ${userId}
+  AND "id" NOT IN (
+    -- All friends
+    SELECT "friendId" FROM "Friend" WHERE "userId" = ${userId}
+    UNION
+    SELECT "userId" FROM "Friend" WHERE "friendId" = ${userId}
+    UNION
+    -- All users with pending friend requests
+    SELECT "receiverId" FROM "FriendRequest" WHERE "senderId" = ${userId}
+    UNION
+    SELECT "senderId" FROM "FriendRequest" WHERE "receiverId" = ${userId}
+  )
+  ORDER BY RANDOM()
+  LIMIT ${limit};
   `;
   return users;
+  // return users;
 }
 
 // async function userListIntro(){

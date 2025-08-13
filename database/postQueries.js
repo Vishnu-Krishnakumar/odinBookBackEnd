@@ -14,6 +14,9 @@ async function userPosts(user) {
     where: {
       authorId: parseInt(user),
     },
+    orderBy: {
+      createdAt: 'desc'
+    }
   });
   return posts;
 }
@@ -36,6 +39,53 @@ async function getPost(postId) {
     },
   });
   return post;
+}
+
+async function getRecentPosts(userId, limit = 10, skip = 0){
+  // const posts = await prisma.post.findMany({
+  //   where: {
+
+  //     OR: [
+  //       { authorId: userId },
+  //       { authorId: { not: userId } }
+  //     ]
+  //   },
+
+  //   orderBy: { createdAt: "desc" }, 
+  //   take: limit,
+  //   skip,
+  //   include: {
+  //     author: {
+  //       select: { id: true, firstname: true, lastname: true, profilepic: true }
+  //     },
+  //     comments: true
+  //   }
+  // });
+  const posts = await prisma.$queryRaw`
+  SELECT 
+    p.*,
+    u.firstname,
+    u.lastname,
+    u.profilepic
+  FROM "Post" p
+  JOIN (
+    SELECT "authorId", MAX("createdAt") as latest
+    FROM "Post"
+    WHERE "authorId" = ${userId}
+       OR "authorId" IN (
+         SELECT "friendId" FROM "Friend" WHERE "userId" = ${userId}
+         UNION
+         SELECT "userId" FROM "Friend" WHERE "friendId" = ${userId}
+       )
+    GROUP BY "authorId"
+  ) latest_posts
+    ON p."authorId" = latest_posts."authorId"
+     AND p."createdAt" = latest_posts.latest
+    JOIN "User" u
+    ON p."authorId" = u.id
+    ORDER BY p."createdAt" DESC;
+  `;
+  return posts;
 }
 
 async function updatePost(post) {
@@ -107,5 +157,6 @@ module.exports ={
   getPost,
   updatePost,
   deletePost,
-  likePost
+  likePost,
+  getRecentPosts
 }
