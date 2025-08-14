@@ -35,5 +35,5 @@ app.use("/posts",postRoutes);
 app.use("/comments",commentRoutes);
 
 server.listen(PORT, () => {
-  console.log(`Listening to port 3000`); 
+  console.log(`Listening to port ${PORT}`); 
 });
