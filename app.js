@@ -11,6 +11,7 @@ const userRoutes = require("./routes/userRoute");
 const postRoutes = require("./routes/postRoute");
 const commentRoutes = require("./routes/commentRoute");
 const PORT = process.env.PORT || 3000;
+const path = require("path");
 const io = new Server(server,{
   cors:{
     origin: ["http://localhost:5173","http://localhost:3000", "http://127.0.0.1:5173","https://odinbook-fsz2.onrender.com"],
